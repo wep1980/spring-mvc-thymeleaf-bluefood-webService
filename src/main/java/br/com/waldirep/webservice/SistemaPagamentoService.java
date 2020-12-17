@@ -1,7 +1,5 @@
 package br.com.waldirep.webservice;
 
-
-
 import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
@@ -24,6 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SistemaPagamentoService {
 	
 	
+	// TOKEN FIXO
+	private static final String AUTH_TOKEN = "r2d2";
+	
+	
 	/**
 	 * A integração com web services normalmente e passado um token que serve para autenticar voce, o web service precisa saber com quem ele esta conversando.
 	 * Esse token normalmente e passado no Header do protocolo, não no corpo do protocolo.
@@ -37,6 +39,10 @@ public class SistemaPagamentoService {
 	 * consumes = MediaType.APPLICATION_JSON_VALUE -> O tipo de dado recebido e o JSON
 	 * produces = MediaType.APPLICATION_JSON_VALUE -> O tipo de dado enviado
 	 * 
+	 * NOSSO TOKEN E FIXO.
+	 * 
+	 * REGRAS : Se o numero do cartao começar com 4 numeros um(1111)
+	 * 
 	 * @param token
 	 * @return
 	 */
@@ -46,7 +52,53 @@ public class SistemaPagamentoService {
 			@Valid @RequestBody DadosCartao dadosCartao,
 			Errors erros){
 		
+		if(!AUTH_TOKEN.equals(token)) {
+			return ResponseEntity.badRequest().body(new PaymentResponse("Token inválido"));
+		}
 		
+		if(erros.hasErrors()) {
+			return ResponseEntity.ok(new PaymentResponse(StatusPagemento.CartaoInvalido)); // E um responseEntity de OK mas avisando sobre o erro do cartão
+		}
+		
+		String numCartao = dadosCartao.getNumCartao();
+		
+		// Se o numero do cartao começar com 1111 o status do pagamento e autorizado, senão é não autorizado
+		StatusPagemento status = numCartao.startsWith("1111") ? StatusPagemento.Autorizado : StatusPagemento.NaoAutorizado; 
+		return ResponseEntity.ok(new PaymentResponse(status));
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
