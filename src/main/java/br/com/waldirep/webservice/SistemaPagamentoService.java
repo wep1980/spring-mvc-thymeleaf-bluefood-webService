@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wepbi
  *
  */
-@RestController // Controller via webService, acessivel via REST, operações HTTP
+@RestController // Controller via webService, acessivel via REST, operaï¿½ï¿½es HTTP
 public class SistemaPagamentoService {
 	
 	
@@ -27,21 +27,21 @@ public class SistemaPagamentoService {
 	
 	
 	/**
-	 * A integração com web services normalmente e passado um token que serve para autenticar voce, o web service precisa saber com quem ele esta conversando.
-	 * Esse token normalmente e passado no Header do protocolo, não no corpo do protocolo.
+	 * A integraï¿½ï¿½o com web services normalmente e passado um token que serve para autenticar voce, o web service precisa saber com quem ele esta conversando.
+	 * Esse token normalmente e passado no Header do protocolo, nï¿½o no corpo do protocolo.
 	 * 
-	 * @RequestHeader("Token") String token) -> extrai o token(valor) do header da requisição e armazena na variavel token.
-	 * Os dados do cartao vão vir dentro do protocolo(corpo) no formato JSON.
-	 * @ResponseBody DadosCartao dadosCartao -> Os dados são extraidos de dentro do corpo do protocolo.
-	 * @Valid -> Faz a validação dos dados do cartão
+	 * @RequestHeader("Token") String token) -> extrai o token(valor) do header da requisiï¿½ï¿½o e armazena na variavel token.
+	 * Os dados do cartao vï¿½o vir dentro do protocolo(corpo) no formato JSON.
+	 * @ResponseBody DadosCartao dadosCartao -> Os dados sï¿½o extraidos de dentro do corpo do protocolo.
+	 * @Valid -> Faz a validaï¿½ï¿½o dos dados do cartï¿½o
 	 * 
-	 * @PostMapping(path = "/pay") -> Requisição do tipo POST
+	 * @PostMapping(path = "/pay") -> Requisiï¿½ï¿½o do tipo POST
 	 * consumes = MediaType.APPLICATION_JSON_VALUE -> O tipo de dado recebido e o JSON
 	 * produces = MediaType.APPLICATION_JSON_VALUE -> O tipo de dado enviado
 	 * 
 	 * NOSSO TOKEN E FIXO.
 	 * 
-	 * REGRAS : Se o numero do cartao começar com 4 numeros um(1111)
+	 * REGRAS : Se o numero do cartao comeÃ§ar com 4 numeros um(1111)
 	 * 
 	 * @param token
 	 * @return
@@ -53,16 +53,16 @@ public class SistemaPagamentoService {
 			Errors erros){
 		
 		if(!AUTH_TOKEN.equals(token)) {
-			return ResponseEntity.badRequest().body(new PaymentResponse("Token inválido"));
+			return ResponseEntity.badRequest().body(new PaymentResponse("Token invÃ¡lido"));
 		}
 		
 		if(erros.hasErrors()) {
-			return ResponseEntity.ok(new PaymentResponse(StatusPagemento.CartaoInvalido)); // E um responseEntity de OK mas avisando sobre o erro do cartão
+			return ResponseEntity.ok(new PaymentResponse(StatusPagemento.CartaoInvalido)); // E um responseEntity de OK mas avisando sobre o erro do cartï¿½o
 		}
 		
 		String numCartao = dadosCartao.getNumCartao();
 		
-		// Se o numero do cartao começar com 1111 o status do pagamento e autorizado, senão é não autorizado
+		// Se o numero do cartao comeï¿½ar com 1111 o status do pagamento e autorizado, senï¿½o ï¿½ nï¿½o autorizado
 		StatusPagemento status = numCartao.startsWith("1111") ? StatusPagemento.Autorizado : StatusPagemento.NaoAutorizado; 
 		return ResponseEntity.ok(new PaymentResponse(status));
 	}
